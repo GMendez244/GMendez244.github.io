@@ -2,11 +2,210 @@
 <html>
 	<head>
 		<title> Guillermo Mendez VR Presentation</title>
+		<style>
+			body{
+				background-color: #32a89d;
+			}
+			p{
+				text-indent: 50px;
+			}
+			div{
+				background-color: white;
+				margin: auto;
+				width: 60%;
+				padding: 10px;
+			}
+			ol{
+				display: inline-block;
+				
+			}
+		</style>
 	</head>
 	<body>
 		<center>
-			<h1>Hello World!</h1>
+			<h1>Guillermo Mendez VR Project</h1>
 		</center>
-		<p>This is Guillermo Mendez' Website thingy!</p>
+		<div>
+				<p>To begin with this final project, I decided that I would create in on Unreal Engine rather than Unity because I feel I am more familiar with it at this point in time.</p>
+				<center>
+					<h3>NOTE, the project has already been created at the time of this writing so all components have been properly created already!</h3>
+				<h1> The World </h1>
+				<table>
+					<tr>
+						<td>
+							<img src="Images/OGStartingWorld.png" height=300 width=100%></img>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>The world the starting template gives you.</label>
+						</td>
+					</tr>
+				</table>
+				<p>The starting world gives you a bunch of cool little toys to play with such as guns, blocks, spheres, and the ability to teleport to move around. As cool as most of these features were to play with, they weren't really what I needed.</p>
+				<p>The first thing that I wanted to do was create the piano, so I hopped into blender to do it.</p>
+				<p>I didn't want to replicate an entire piano, so I tried making a mini one to keep the scope small and make it possible. To do that, I made sure that I created the Piano for one Octave. From C3 up to C4.</p>				
+				<table>
+					<tr>
+						<td>
+							<img src="Images/MiniPiano.png" height=300 width=100%></img>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>The Mini-Piano I created in blender</label>
+						</td>
+					</tr>
+				</table>
+				<p>For those who don't know, there are seven letters in the Musical Alphabet and we use these letters to identify which note/sound is being played.</p>
+				<ol>
+					<li>A</li>
+					<li>B</li>
+					<li>C</li>
+					<li>D</li>
+					<li>E</li>
+					<li>F</li>
+					<li>G</li>
+				</ol>
+				<p>Turns out that importing the mini piano was going to be a problem for me. When I exported the blender file, each individual key was separated from one another, and when I imported it into unreal, it had broken apart my grand creation. I didn't see an option to select it in it's original form.</p>
+				<p>Before you ask, why don't you just join them in blender? No, that wasn't going to work. If I want this to simulate a proper piano, I could not have it be a single static mesh. So, I unfortunately had to rebuild it in the Unreal World Hub, so I did.</p>
+				<p>Before I started building I created two blueprints (This is basically creating a class that I can manipulate later on), One for the White Keys, and one for the Black Keys. I wanted to make sure that I built the piano with this class so any changes that I make to any code gets implemented to ALL of the keys after. The black keys would inherit all information/functionality from the white keys. </p>
+				<table>
+					<tr>
+						<td>
+							<img src="Images/BrokenPiano.png" height=300 width=100%></img>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>My poor poor boy :(</label>
+						</td>
+					</tr>
+				</table>
+				<table>
+					<tr>
+						<td>
+							<img src="Images/UnrealPiano.png" height=300 width=100%></img>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>The Mini-Piano that I created in Unreal.(SPOILER to check one of my functionalitys I expanded this piano to be two octaves instead of one.)</label>
+						</td>
+					</tr>
+				</table>
+				<p>Before I did anything else, I wanted to make sure that the VR hands that was provided for me in the Unreal Engine VR Template could properly interact with the world. In order to do this, the Blueprint White Key and Black Key classes were given an event that is activated whenever an actor in the world overlaps with it, and they will change color if the overlap was with the VRPawn(The vr interface so kindly given to us by Unreal). Big problem though, this didn't work.
+				<table>
+					<tr>
+						<td>
+							<img src="Images/OverlappedKeys.png" height=300 width=100%></img>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>Adding an Overlap Feature to the Keys.</label>
+						</td>
+					</tr>
+				</table>
+				<p>Unfortunately no matter how hard I banged my hands on these keys, there would be no color change, meaning that there was no collision between these two actors, even though there was visually. I decided to look around the VRPawn Template to figure out if there was a function I needed to call to get this to work.</p>
+				<p>First thing I do is go to the VRPawn Viewport to see what the hands look like in the scene, and it turns out, I'm just looking at a camera staring past a scene component. The entire pawn is basically just a ghost with no body.</p>
+				<table>
+					<tr>
+						<td>
+							<img src="Images/Ghost.png" height=300 width=100%></img>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>The VRPawn had no collision component.</label>
+						</td>
+					</tr>
+				</table>
+				<p>So you might be asking yourself, how do I make the controller interact with the world? My solution, give it boxing gloves.</p>
+				<table>
+					<tr>
+						<td>
+							<img src="Images/BoxingGlove.png" height=300 width=100%></img>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>Giving a collision component as a child of the Right and Left Controllers</label>
+						</td>
+					</tr>
+				</table>
+				<p>After giving my controllers boxing gloves, we finally did it! The VRPawn and the Blueprint Keys could communicate with each other! But that was just the first step. The next step was just to get the Keys to make noise. First, I went into my White Key Blueprint and added a Sound Base component which I called Note, we would get this to trigger any time the VRPawn overlapped with the Piano Key. The Note had no sound file attached to it and I wanted to allow the note to be changed via the details panel (because each note may be different). So every note can be changed via the Details piano of each piano Key.</p>
+				<p>Next step is to retrieve the note. I used an open-source music development software called MuseScore3 and exported each note as a whole note tied to another whole note. Then I exported this into a sound file named after the appropriate note. Each note would then be attached to it's corresponding note.
+				<table>
+					<tr>
+						<td>
+							<img src="Images/WholeNote.png" height=300 width=100%></img>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>Obtaining Piano Sound Files</label>
+						</td>
+					</tr>
+				</table>
+				<p>Each Piano Key now plays the appropriate note and we are able to play with the Piano Freely. However, I want to make sure that we are able to play songs with this Piano. So I needed to put a song in.</p>
+				<p>My choice of the song is Twinkle Twinkle Little Star. It's an old classic, and I'm pretty sure everyone has at least heard of it. There are multiple ways that I could think of implementing this, but I decided on something a little more creative. What you're probably thinking of is picking the notes that it would correspond in the appropriate order. There is another way though.</p>
+				<p>The other way is to think of the song in terms of the major scale within. Regardless of the scale, as long as you play the appropriate intervals, you will be able to process that the song is Twinkle Twinkle Little Star.</p>
+				<p>Twinkle Twinkle Little Star is as follows: </p>
+				<p>1 1 5 5 6 6 5</p>
+				<p>4 4 3 3 2 2 1</p>
+				<p>5 5 4 4 3 3 2</p>
+				<p>5 5 4 4 3 3 2</p>
+				<p>1 1 5 5 6 6 5</p>
+				<p>4 4 3 3 2 2 1</p>
+				<p>It's kind of hard to explain without having prior knowledge of music, but it works, trust me. Twinkle Twinkle Little star will now be stored into an integer array of all things, and we're good to go. We have the song ready in terms of intervals.</p>
+				<p>The next thing we need to prepare is the Major Scales. Since this is how our intervals are based around, it's important we get it working. I picked two of (in my opinion) the simplest scales. The C Major Scale and the F Major Scale.
+				<table>
+				<tr>
+					<th>C Major Scale</th>
+					<th>F Major Scale</th>
+				</tr>
+				<tr>
+					<td>
+						<ol>
+							<li>C</li>
+							<li>D</li>
+							<li>E</li>
+							<li>F</li>
+							<li>G</li>
+							<li>A</li>
+							<li>B</li>
+							<li>C</li>
+						</ol>
+					</td>
+					<td>
+						<ol>
+							<li>F</li>
+							<li>G</li>
+							<li>A</li>
+							<li>B&#9837 </li>
+							<li>C</li>
+							<li>D</li>
+							<li>E</li>
+							<li>F</li>
+						</ol>
+					</td>
+				</tr>
+				</table>
+				
+				<p>To make things easier for me, what I decided to do was have the Major Scales be a dictionary/map. Each interval would correspond to the correct key. If the Key is 1 for the C Major scale, the Value is C and vice versa. Reading the first line of Twinkle Twinkle Little Star now looks like this: </p>
+				<table border=1>
+					<tr>
+						<th>C Major Scale</th>
+						<th>F Major Scale</th>
+					</tr>
+					<tr>
+						<td>C C G G A A G</td>
+						<td>F F C C D D C</td>
+					</tr>
+				</table>
+				<p>Simple right? Then I program the logic that allows me to read through the song and boom! You are now able to play through Twinkle Twinkle Little Star in any major scale that you have created! Although I've only created two to prove a point, it is still there for further expansion. Finally, I added logic that would allow me to play the song with the key the user pressed. If it's wrong the key highlights red and moves onto the next note. If it's right, it highlights the next key to be played.</p>
+				<p>Finally, here's a demonstration of the Game!</p>
+		</div>
 	</body>
 </html>
